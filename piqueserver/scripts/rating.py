@@ -35,8 +35,8 @@ def rating(connection, value=None):
     if record is None:
         return 'Player rating could not be determined.'
 
-    listing = '%s rating is: %.2f' % (player, record.mu*100)
-    return listing + "\n" + header
+    listing = '%s's rating is: %.2f' % (player, record.mu*100)
+    return listing + "\n\n" + header
 
 @command("top10")
 def top10(connection):
