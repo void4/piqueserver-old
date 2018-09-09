@@ -972,7 +972,7 @@ class ServerConnection(BaseConnection):
             by.add_score(1)
         kill_action.respawn_time = self.get_respawn_time() + 1
 
-        print(kill_action, kill_action.killer_id, kill_action.player_id, self.name)
+        #print(kill_action, kill_action.killer_id, kill_action.player_id, self.name)
 
         if kill_action.killer_id != kill_action.player_id:
             killer = None
