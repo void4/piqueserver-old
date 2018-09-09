@@ -978,7 +978,7 @@ class ServerConnection(BaseConnection):
             killer = None
             for player in self.protocol.players.values():
                 if player.player_id == kill_action.killer_id:
-                    killer = player.name
+                    killer = player
 
             try:
                 self_elo = db[self.name]
@@ -987,18 +987,20 @@ class ServerConnection(BaseConnection):
                 db[self.name] = rating
 
             try:
-                killer_elo = db[killer]
+                killer_elo = db[killer.name]
             except KeyError:
                 rating = trueskill.Rating()
-                db[killer] = rating
+                db[killer.name] = rating
 
-            a1 = db[killer].mu
+            a1 = db[killer.name].mu
             b1 = db[self.name].mu
-            db[killer], db[self.name] = trueskill.rate_1vs1(db[killer], db[self.name])
-            a2 = db[killer].mu
+            db[killer.name], db[self.name] = trueskill.rate_1vs1(db[killer.name], db[self.name])
+            a2 = db[killer.name].mu
             b2 = db[self.name].mu
 
-            self.send_chat("%.2f %.2f - %.2f %.2f" % (a2*100, (a2-a1)*100, b2*100, (b2-b1)*100), global_message=True)
+            self.send_chat("ENEMY: %.2f (GOT +%.2f) | YOU: %.2f (LOST %.2f)" % (a2*100, (a2-a1)*100, b2*100, (b2-b1)*100), global_message=True)
+            killer.send_chat("YOU: %.2f (GOT +%.2f) | ENEMY: %.2f (LOST %.2f)" % (a2*100, (a2-a1)*100, b2*100, (b2-b1)*100), global_message=True)
+
 
         self.protocol.send_contained(kill_action, save=True)
         self.world_object.dead = True
