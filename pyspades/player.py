@@ -28,6 +28,11 @@ from pyspades.common import Vertex3, get_color, make_color
 from pyspades.weapon import WEAPONS
 from pyspades.mapgenerator import ProgressiveMapGenerator
 
+import shelve
+import trueskill
+
+db = shelve.open("shelve.db")
+
 log = Logger()
 
 set_tool = loaders.SetTool()
@@ -966,6 +971,35 @@ class ServerConnection(BaseConnection):
         if by is not None and by is not self:
             by.add_score(1)
         kill_action.respawn_time = self.get_respawn_time() + 1
+
+        print(kill_action, kill_action.killer_id, kill_action.player_id, self.name)
+
+        if True:#kill_action.killer_id != kill_action.player_id:
+            killer = None
+            for player in self.protocol.players.values():
+                if player.player_id == kill_action.killer_id:
+                    killer = player.name
+
+            try:
+                self_elo = db[self.name]
+            except KeyError:
+                rating = trueskill.Rating()
+                db[self.name] = rating
+
+            try:
+                killer_elo = db[killer]
+            except KeyError:
+                rating = trueskill.Rating()
+                db[killer] = rating
+
+            a1 = db[killer].mu
+            b1 = db[self.name].mu
+            db[killer], db[self.name] = trueskill.rate_1vs1(db[killer], db[self.name])
+            a2 = db[killer].mu
+            b2 = db[self.name].mu
+
+            self.send_chat("%.2f %.2f - %.2f %.2f" % (a2*100, (a2-a1)*100, b2*100, (b2-b1)*100), global_message=True)
+
         self.protocol.send_contained(kill_action, save=True)
         self.world_object.dead = True
         self.respawn()
