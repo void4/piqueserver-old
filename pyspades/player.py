@@ -974,7 +974,7 @@ class ServerConnection(BaseConnection):
 
         print(kill_action, kill_action.killer_id, kill_action.player_id, self.name)
 
-        if True:#kill_action.killer_id != kill_action.player_id:
+        if kill_action.killer_id != kill_action.player_id:
             killer = None
             for player in self.protocol.players.values():
                 if player.player_id == kill_action.killer_id:
