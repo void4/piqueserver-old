@@ -20,7 +20,7 @@ import trueskill
 
 db = shelve.open("shelve.db")
 
-header = "Bottom\n1%: 560\n10%: 1430\n20%: 1800\n33%: 2130\nAverage: 2500\nTop\n33%: 2870\n20%: 3200\n10%: 3560\n1%: 4430\n"
+header = "Bottom\n1%: 560 | 10%: 1430 | 20%: 1800 | 33%: 2130\nAverage: 2500\nTop\n33%: 2870 | 20%: 3200 | 10%: 3560 | 1%: 4430\n"
 
 @command('rating')
 def rating(connection, value=None):
