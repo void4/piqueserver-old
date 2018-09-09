@@ -35,6 +35,11 @@ def rating(connection, value=None):
 
     return '%s rating is: %.2f' % (player.name, record.mu*100)
 
+@command("top10")
+def top10(connection):
+    sortedscores = sorted(list(db.items()), key=lambda x:x[1].mu, reverse=True)
+    listing = "\n".join(["%.2f\t%.2f\t%s" % (v.mu*100,v.sigma*100,k) for k,v in sortedscores[:10]])
+    return listing
 
 def apply_script(protocol, connection, config):
     return protocol, connection
