@@ -25,15 +25,15 @@ def rating(connection, value=None):
     if value is None:
         if connection not in connection.protocol.players:
             raise ValueError()
-        player = connection
+        player = connection.name
     else:
-        player = get_player(connection.protocol, value)
+        player = value
 
-    record = db.get(player.name)
+    record = db.get(player)
     if record is None:
         return 'Player rating could not be determined.'
 
-    return '%s rating is: %.2f' % (player.name, record.mu*100)
+    return '%s rating is: %.2f' % (player, record.mu*100)
 
 @command("top10")
 def top10(connection):
