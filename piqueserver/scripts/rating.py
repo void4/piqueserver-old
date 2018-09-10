@@ -36,14 +36,16 @@ def rating(connection, value=None):
     if record is None:
         return 'Player rating could not be determined.'
 
-    listing = "%s's rating is: %.2f" % (player, record.mu*100)
+    listing = "%s's rating is: %.2f" % (player, (record.mu-record.sigma*3)*100)
     return listing + "\n\n" + header
 
-@command("top10")
-def top10(connection):
+@command("top")
+def top(connection, value=None):
+    if value is None:
+        value = 10
     db.sync()
-    sortedscores = sorted(list(db.items()), key=lambda x:x[1].mu, reverse=True)
-    listing = "\n".join(["%.2f\t%.2f\t%s" % (v.mu*100,v.sigma*100,k) for k,v in sortedscores[:10]])
+    sortedscores = sorted(list(db.items()), key=lambda x:x[1].mu-x[1].sigma*3, reverse=True)
+    listing = "\n".join(["%.2f\t%s" % ((v.mu-3*v.sigma)*100,k) for k,v in sortedscores[:value]])
     return listing
 
 def apply_script(protocol, connection, config):

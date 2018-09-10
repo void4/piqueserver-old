@@ -992,11 +992,11 @@ class ServerConnection(BaseConnection):
                 rating = trueskill.Rating()
                 db[killer.name] = rating
 
-            a1 = db[killer.name].mu
-            b1 = db[self.name].mu
+            a1 = db[killer.name].mu-3*db[killer.name].sigma
+            b1 = db[self.name].mu-3*db[self.name].sigma
             db[killer.name], db[self.name] = trueskill.rate_1vs1(db[killer.name], db[self.name])
-            a2 = db[killer.name].mu
-            b2 = db[self.name].mu
+            a2 = db[killer.name].mu-3*db[killer.name].sigma
+            b2 = db[self.name].mu-3*db[self.name].sigma
 
             db.sync()
 
