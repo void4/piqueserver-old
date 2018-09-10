@@ -24,6 +24,7 @@ header = "Bottom 1%: 560 | 10%: 1430 | 20%: 1800 | 33%: 2130\nAverage: 2500\nTop
 
 @command('rating')
 def rating(connection, value=None):
+    db.sync()
     if value is None:
         if connection not in connection.protocol.players:
             raise ValueError()
@@ -40,6 +41,7 @@ def rating(connection, value=None):
 
 @command("top10")
 def top10(connection):
+    db.sync()
     sortedscores = sorted(list(db.items()), key=lambda x:x[1].mu, reverse=True)
     listing = "\n".join(["%.2f\t%.2f\t%s" % (v.mu*100,v.sigma*100,k) for k,v in sortedscores[:10]])
     return listing
