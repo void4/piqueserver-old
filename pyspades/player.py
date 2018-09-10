@@ -998,6 +998,8 @@ class ServerConnection(BaseConnection):
             a2 = db[killer.name].mu
             b2 = db[self.name].mu
 
+            db.sync()
+
             self.send_chat("ENEMY: %.2f (GOT +%.2f) | YOU: %.2f (LOST %.2f)" % (a2*100, (a2-a1)*100, b2*100, (b2-b1)*100), global_message=True)
             killer.send_chat("YOU: %.2f (GOT +%.2f) | ENEMY: %.2f (LOST %.2f)" % (a2*100, (a2-a1)*100, b2*100, (b2-b1)*100), global_message=True)
 
