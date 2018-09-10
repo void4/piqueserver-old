@@ -43,6 +43,8 @@ def rating(connection, value=None):
 def top(connection, value=None):
     if value is None:
         value = 10
+    else:
+        value = max(1,int(value))
     db.sync()
     sortedscores = sorted(list(db.items()), key=lambda x:x[1].mu-x[1].sigma*3, reverse=True)
     listing = "\n".join(["%.2f\t%s" % ((v.mu-3*v.sigma)*100,k) for k,v in sortedscores[:value]])
